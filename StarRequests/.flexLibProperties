@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
-  <includeClasses>
-    <classEntry path="couk.markstar.starrequests.requests.IRequest"/>
-    <classEntry path="couk.markstar.starrequests.requests.AbstractRequest"/>
-    <classEntry path="couk.markstar.starrequests.requests.LoadXMLRequest"/>
-    <classEntry path="couk.markstar.starrequests.requests.LoadBitmapRequest"/>
-    <classEntry path="couk.markstar.starrequests.requests.LoadBitmapDataRequest"/>
-    <classEntry path="couk.markstar.starrequests.utils.RequestBatchUtil"/>
-  </includeClasses>
+  <includeClasses/>
   <includeResources/>
   <namespaceManifests/>
 </flexLibProperties>

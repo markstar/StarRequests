@@ -31,11 +31,14 @@ package couk.markstar.starrequests.requests
 		override public function send():void
 		{
 			super.send();
+			
 			_loader.load( new URLRequest( _url ) );
 		}
 		
 		override public function cleanup():void
 		{
+			super.cleanup();
+			
 			_loader.removeEventListener( ProgressEvent.PROGRESS, progressListener );
 			_loader.removeEventListener( Event.COMPLETE, completeListener );
 			_loader.removeEventListener( SecurityErrorEvent.SECURITY_ERROR, securityErrorListener );
