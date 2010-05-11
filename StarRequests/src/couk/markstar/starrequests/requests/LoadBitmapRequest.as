@@ -56,13 +56,13 @@ package couk.markstar.starrequests.requests
 			
 			_completedSignal.dispatch( Bitmap( _loader.content ) );
 			
-			attemptAutoCleanup();
+			cleanup();
 		}
 		
 		protected function ioErrorListener( e:IOErrorEvent ):void
 		{
 			_failedSignal.dispatch( e.text );
-			attemptAutoCleanup();
+			cleanup();
 		}
 	}
 }

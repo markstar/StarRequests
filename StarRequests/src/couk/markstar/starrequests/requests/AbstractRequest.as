@@ -5,8 +5,6 @@ package couk.markstar.starrequests.requests
 	
 	public class AbstractRequest implements IRequest
 	{
-		protected var _autoCleanup:Boolean;
-		
 		protected var _startedSignal:Signal;
 		protected var _progressSignal:Signal;
 		protected var _completedSignal:Signal;
@@ -14,7 +12,6 @@ package couk.markstar.starrequests.requests
 		
 		public function AbstractRequest()
 		{
-			_autoCleanup = true;
 			_progressSignal = new Signal( Number );
 			_startedSignal = new Signal();
 			_failedSignal = new Signal( String );
@@ -40,11 +37,6 @@ package couk.markstar.starrequests.requests
 			return _failedSignal;
 		}
 		
-		public function set autoCleanup( value:Boolean ):void
-		{
-			_autoCleanup = value;
-		}
-		
 		public function send():void
 		{
 			_startedSignal.dispatch();
@@ -62,14 +54,6 @@ package couk.markstar.starrequests.requests
 			_progressSignal = null;
 			_completedSignal = null;
 			_failedSignal = null;
-		}
-		
-		protected function attemptAutoCleanup():void
-		{
-			if( _autoCleanup )
-			{
-				cleanup();
-			}
 		}
 	}
 }

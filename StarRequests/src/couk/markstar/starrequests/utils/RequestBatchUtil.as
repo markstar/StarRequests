@@ -64,7 +64,7 @@ package couk.markstar.starrequests.utils
 			request = null;
 			_totalRequests = 0;
 			
-			attemptAutoCleanup();
+			cleanup();
 		}
 		
 		protected function sendNextRequest():void

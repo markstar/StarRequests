@@ -67,19 +67,19 @@ package couk.markstar.starrequests.requests
 			{
 				_failedSignal.dispatch( e.message.toString() );
 			}
-			attemptAutoCleanup();
+			cleanup();
 		}
 		
 		protected function securityErrorListener( e:SecurityErrorEvent ):void
 		{
 			_failedSignal.dispatch( e.text );
-			attemptAutoCleanup();
+			cleanup();
 		}
 		
 		protected function ioErrorListener( e:IOErrorEvent ):void
 		{
 			_failedSignal.dispatch( e.text );
-			attemptAutoCleanup();
+			cleanup();
 		}
 	}
 }

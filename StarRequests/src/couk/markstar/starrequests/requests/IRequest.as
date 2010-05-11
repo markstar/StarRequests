@@ -8,8 +8,6 @@ package couk.markstar.starrequests.requests
 		function get progressSignal():ISignal;
 		function get completedSignal():ISignal;
 		function get failedSignal():ISignal;
-		function set autoCleanup( value:Boolean ):void;
 		function send():void;
-		function cleanup():void;
 	}
 }
