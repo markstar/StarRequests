@@ -7,13 +7,20 @@ package couk.markstar.starrequests.requests
 	import flash.events.ProgressEvent;
 	import flash.net.URLRequest;
 	
+	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	
+	/**
+	 * A request to load a Bitmap from an image file.
+	 * @author Sharky
+	 */
 	public class LoadBitmapRequest extends AbstractRequest
 	{
 		protected var _loader:Loader;
 		protected var _url:String;
-		
+		/**
+		 * @param url The URL of the image file to load. Only image file types that are natively support by the Flash player are currently supported.
+		 */	
 		public function LoadBitmapRequest( url:String )
 		{
 			super();
@@ -26,15 +33,34 @@ package couk.markstar.starrequests.requests
 			_loader.contentLoaderInfo.addEventListener( Event.COMPLETE, completeListener );
 			_loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, ioErrorListener );
 		}
-		
+		/**
+		 * The instance of the completed signal for this request
+		 * @return An implementation of ISignal. Listeners to the completed signal require a Bitmap as a parameter.
+		 * @example The following code demonstrates a listener for the completed signal:
+		 * <listing version="3.0">
+		 * protected function completedListener( bitmap:Bitmap ):void
+		 * {
+		 * 		// function implementation
+		 * }
+		 * </listing> 
+		 */
+		override public function get completedSignal():ISignal
+		{
+			return super.completedSignal;
+		}
+		/**
+		 * @inheritDoc
+		 */			
 		override public function send():void
 		{
 			super.send();
 			
 			_loader.load( new URLRequest( _url ) );
 		}
-		
-		override public function cleanup():void
+		/**
+		 * @private
+		 */
+		override protected function cleanup():void
 		{
 			super.cleanup();
 			
@@ -44,12 +70,16 @@ package couk.markstar.starrequests.requests
 			_loader = null;
 			_url = null;
 		}
-		
+		/**
+		 * @private
+		 */
 		protected function progressListener( e:ProgressEvent ):void
 		{
 			_progressSignal.dispatch( e.bytesLoaded / e.bytesTotal );
 		}
-		
+		/**
+		 * @private
+		 */
 		protected function completeListener( e:Event ):void
 		{
 			_progressSignal.dispatch( 1 );
@@ -58,7 +88,9 @@ package couk.markstar.starrequests.requests
 			
 			cleanup();
 		}
-		
+		/**
+		 * @private
+		 */
 		protected function ioErrorListener( e:IOErrorEvent ):void
 		{
 			_failedSignal.dispatch( e.text );

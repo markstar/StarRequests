@@ -41,7 +41,7 @@ package couk.markstar.starrequests.utils
 			sendNextRequest();
 		}
 		
-		override public function cleanup():void
+		override protected function cleanup():void
 		{
 			super.cleanup();
 			
