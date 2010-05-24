@@ -41,9 +41,9 @@ package couk.markstar.starrequests.utils
 		{
 			if( !_isExecuting && _requests.length )
 			{
+				_isExecuting = true;
 				_currentRequest = _requests.shift();
 				_currentRequest.send();
-				_isExecuting = true;
 			}
 		}
 		
