@@ -1,0 +1,13 @@
+package couk.markstar.starrequests.utils
+{
+	import couk.markstar.starrequests.requests.AbstractRequest;
+	import couk.markstar.starrequests.requests.IRequest;
+	
+	public final class RequestBatchAsyncUtil extends AbstractRequest implements IRequest
+	{
+		public function RequestBatchAsyncUtil()
+		{
+			super();
+		}
+	}
+}

@@ -1,0 +1,12 @@
+package
+{
+	import couk.markstar.starrequests.requests.AbstractRequest;
+	
+	public class RequestTemplate extends AbstractRequest
+	{
+		public function RequestTemplate()
+		{
+			super();
+		}
+	}
+}

@@ -3,18 +3,21 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import couk.markstar.starrequests.requests.ExampleSynchronousRequest;
 			import couk.markstar.starrequests.requests.IRequest;
 			import couk.markstar.starrequests.requests.LoadBitmapDataRequest;
 			import couk.markstar.starrequests.requests.LoadBitmapRequest;
 			import couk.markstar.starrequests.requests.LoadXMLRequest;
+			import couk.markstar.starrequests.utils.RequestBatchAsyncUtil;
 			import couk.markstar.starrequests.utils.RequestBatchUtil;
+			import couk.markstar.starrequests.utils.RequestQueueAsyncUtil;
 			import couk.markstar.starrequests.utils.RequestQueueUtil;
 			
 			protected var _queue:RequestQueueUtil = new RequestQueueUtil();
 			
 			protected function loadXMLClickListener( e:MouseEvent ):void
 			{
-				var request:LoadXMLRequest = new LoadXMLRequest( xmlURL.text );
+				var request:IRequest = new LoadXMLRequest( xmlURL.text );
 				request.startedSignal.add( startedListener );
 				request.progressSignal.add( progressListener );
 				request.completedSignal.add( loadXMLCompleteListener );
@@ -77,6 +80,43 @@
 				output.text += message + "\n";
 			}
 			
+			protected function runAsyncBatches( e:MouseEvent ):void
+			{
+				var batch:RequestBatchAsyncUtil = new RequestBatchAsyncUtil( 3, 1000 );
+				batch.startedSignal.add( batchStartedListener );
+				batch.progressSignal.add( batchProgressListener );
+				batch.completedSignal.add( batchCompletedListener );
+				
+				var request:IRequest
+				for( var i:uint = 0; i < 20; i++ )
+				{
+					request = new ExampleSynchronousRequest( i );
+					request.completedSignal.add( exampleCompleteListener );
+					batch.addRequest( request );
+				}
+				
+				
+				_queue.addRequest( batch );
+			}
+			
+			protected function runAsyncQueue( e:MouseEvent ):void
+			{
+				var queue:RequestQueueAsyncUtil = new RequestQueueAsyncUtil( 2, 10 );
+				
+				var request:IRequest
+				for( var i:uint = 0; i < 20; i++ )
+				{
+					request = new ExampleSynchronousRequest( i );
+					request.completedSignal.add( exampleCompleteListener );
+					queue.addRequest( request );
+				}
+			}
+			
+			protected function exampleCompleteListener( id:uint ):void
+			{
+				out( "request completed - " + id );
+			}
+			
 			protected function runBatchListener( e:MouseEvent ):void
 			{
 				var batch:RequestBatchUtil = new RequestBatchUtil();
@@ -127,6 +167,11 @@
 	
 	
 	<s:VGroup width="100%" height="100%">
+		
+		<s:HGroup>			
+			<s:Button label="Test Async Batches" click="runAsyncBatches(event)" />
+			<s:Button label="Test Async Queue" click="runAsyncQueue(event)" />
+		</s:HGroup>
 		
 		<s:Button label="Run batch processes" click="runBatchListener(event)"/>
 		

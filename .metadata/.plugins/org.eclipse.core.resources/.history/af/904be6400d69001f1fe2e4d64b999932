@@ -1,0 +1,10 @@
+package couk.markstar.starrequests.requests
+{
+	public final class ExampleSynchronousRequest extends AbstractRequest implements IRequest
+	{
+		public function ExampleSynchronousRequest()
+		{
+			super();
+		}
+	}
+}

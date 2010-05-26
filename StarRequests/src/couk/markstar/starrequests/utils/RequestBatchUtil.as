@@ -6,7 +6,7 @@ package couk.markstar.starrequests.utils
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	
-	public class RequestBatchUtil extends AbstractRequest implements IRequest
+	public final class RequestBatchUtil extends AbstractRequest implements IRequest
 	{
 		protected var _isExecuting:Boolean;
 		protected var _requests:Vector.<IRequest>;
