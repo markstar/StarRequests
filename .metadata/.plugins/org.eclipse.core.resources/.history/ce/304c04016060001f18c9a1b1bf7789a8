@@ -1,9 +1,0 @@
-package couk.markstar.starrequests.examples
-{
-	public class NormalXMLLoadRequest
-	{
-		public function NormalXMLLoadRequest()
-		{
-		}
-	}
-}

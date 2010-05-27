@@ -1,9 +1,0 @@
-package couk.markstar.starrequests.utils
-{
-	public final class RequestQueueAsyncUtil
-	{
-		public function RequestQueueAsyncUtil()
-		{
-		}
-	}
-}
