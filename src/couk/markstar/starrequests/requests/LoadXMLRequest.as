@@ -91,13 +91,15 @@ package couk.markstar.starrequests.requests
 			try
 			{
 				var xml:XML = new XML( e.currentTarget.data );
-				_completedSignal.dispatch( xml );
 			}
 			catch( e:Error )
 			{
 				_failedSignal.dispatch( e.message.toString() );
+				cleanup();
+				return;
 			}
 			cleanup();
+			_completedSignal.dispatch( xml );
 		}
 		/**
 		 * @private
