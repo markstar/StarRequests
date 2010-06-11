@@ -25,7 +25,7 @@ package couk.markstar.starrequests.utils
 			super();
 			
 			_numRequestsPerCycle = numRequestsPerCycle;
-			_requestsExecutedThisCyle = 0;
+			_requestsExecutedThisCyle = _numRequestsPerCycle;
 			_cycleDelay = cycleDelay;
 			_isExecuting = false;
 			_totalRequests = 0;

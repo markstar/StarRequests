@@ -98,8 +98,8 @@ package couk.markstar.starrequests.requests
 				cleanup();
 				return;
 			}
-			cleanup();
 			_completedSignal.dispatch( xml );
+			cleanup();
 		}
 		/**
 		 * @private

@@ -20,7 +20,7 @@ package couk.markstar.starrequests.utils
 		public function RequestQueueAsyncUtil( numRequestsPerCycle:uint, cycleDelay:uint = 100 )
 		{
 			_numRequestsPerCycle = numRequestsPerCycle;
-			_requestsExecutedThisCyle = 0;
+			_requestsExecutedThisCyle = _numRequestsPerCycle;
 			_cycleDelay = cycleDelay;
 			_isExecuting = false;
 			_requests = new Vector.<IRequest>();
