@@ -70,6 +70,16 @@ package couk.markstar.starrequests.requests
 			return _failedSignal;
 		}
 		/**
+		 * Helper function for sending the failed signal. It dispatches the failed signal then runs cleanup
+		 * @param message The failed message
+		 * 
+		 */		
+		protected function failed( message:String ):void
+		{
+			_failedSignal.dispatch( message );
+			cleanup();
+		}
+		/**
 		 * @inheritDoc
 		 */		
 		public function send():void

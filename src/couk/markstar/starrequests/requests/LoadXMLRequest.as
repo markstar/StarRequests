@@ -94,8 +94,7 @@ package couk.markstar.starrequests.requests
 			}
 			catch( e:Error )
 			{
-				_failedSignal.dispatch( e.message.toString() );
-				cleanup();
+				failed( e.message.toString() );
 				return;
 			}
 			_completedSignal.dispatch( xml );
@@ -106,16 +105,14 @@ package couk.markstar.starrequests.requests
 		 */
 		protected function securityErrorListener( e:SecurityErrorEvent ):void
 		{
-			_failedSignal.dispatch( e.text );
-			cleanup();
+			failed( e.text );
 		}
 		/**
 		 * @private
 		 */
 		protected function ioErrorListener( e:IOErrorEvent ):void
 		{
-			_failedSignal.dispatch( e.text );
-			cleanup();
+			failed( e.text );
 		}
 	}
 }

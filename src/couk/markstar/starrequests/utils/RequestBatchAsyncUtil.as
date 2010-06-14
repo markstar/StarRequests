@@ -109,8 +109,11 @@ package couk.markstar.starrequests.utils
 		
 		protected function sendCurrentRequest():void
 		{
-			_requestsExecutedThisCyle++;
-			_currentRequest.send();
+			if( _totalRequests )
+			{
+				_requestsExecutedThisCyle++;
+				_currentRequest.send();
+			}
 		}
 		
 		protected function requestProgressListener( progress:Number ):void
