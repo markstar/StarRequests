@@ -12,7 +12,7 @@ package couk.markstar.starrequests.requests
 	
 	/**
 	 * A request to load a Bitmap from an image file.
-	 * @author Sharky
+	 * @author markstar
 	 */
 	public class LoadBitmapRequest extends AbstractRequest
 	{
@@ -23,9 +23,10 @@ package couk.markstar.starrequests.requests
 		 */	
 		public function LoadBitmapRequest( url:String )
 		{
+			_url = url;
+			
 			super();
 			
-			_url = url;
 			_completedSignal = new Signal( Bitmap );
 			
 			_loader = new Loader();
@@ -38,11 +39,11 @@ package couk.markstar.starrequests.requests
 		 * @return An implementation of ISignal. Listeners to the completed signal require a Bitmap as a parameter.
 		 * @example The following code demonstrates a listener for the completed signal:
 		 * <listing version="3.0">
-		 * protected function completedListener( bitmap:Bitmap ):void
-		 * {
-		 * 		// function implementation
-		 * }
-		 * </listing> 
+protected function completedListener( bitmap:Bitmap ):void
+{
+	// function implementation
+}
+</listing> 
 		 */
 		override public function get completedSignal():ISignal
 		{
@@ -58,17 +59,26 @@ package couk.markstar.starrequests.requests
 			_loader.load( new URLRequest( _url ) );
 		}
 		/**
+		 * @inheritDoc
+		 */		
+		public override function cancel():void
+		{
+			_loader.close();
+			
+			super.cancel();
+		}
+		/**
 		 * @private
 		 */
 		override protected function cleanup():void
 		{
-			super.cleanup();
-			
 			_loader.contentLoaderInfo.removeEventListener( ProgressEvent.PROGRESS, progressListener );
 			_loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, completeListener );
 			_loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, ioErrorListener );
 			_loader = null;
 			_url = null;
+			
+			super.cleanup();
 		}
 		/**
 		 * @private
@@ -93,8 +103,7 @@ package couk.markstar.starrequests.requests
 		 */
 		protected function ioErrorListener( e:IOErrorEvent ):void
 		{
-			_failedSignal.dispatch( e.text );
-			cleanup();
+			failed( e.text );
 		}
 	}
 }

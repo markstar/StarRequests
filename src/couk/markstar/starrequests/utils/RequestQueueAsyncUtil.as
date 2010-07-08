@@ -1,12 +1,13 @@
 package couk.markstar.starrequests.utils
 {
+	import couk.markstar.starrequests.ICancelable;
 	import couk.markstar.starrequests.requests.IRequest;
 	
 	import flash.utils.setTimeout;
 	
 	import org.osflash.signals.ISignal;
-
-	public final class RequestQueueAsyncUtil
+	
+	public final class RequestQueueAsyncUtil implements ICancelable
 	{
 		protected var _numRequestsPerCycle:uint;
 		protected var _requestsExecutedThisCyle:uint;
@@ -34,17 +35,24 @@ package couk.markstar.starrequests.utils
 			sendNextRequest();
 		}
 		
-		public function clear():void
+		public function cancel():void
 		{
-			var request:IRequest;
-			
-			while( _requests.length )
+			if( _currentRequest )
 			{
-				request = _requests.shift();
-				removeListeners( request.completedSignal );
-				removeListeners( request.failedSignal );
+				_currentRequest.cancel();
+				_currentRequest = null;
 			}
-			request = null;
+			
+			if( _requests )
+			{
+				while( _requests.length )
+				{
+					_requests.shift().cancel();
+				}
+			}
+			_requests.length = 0;
+			
+			_isExecuting = false;
 		}
 		
 		protected function sendNextRequest():void
@@ -53,7 +61,7 @@ package couk.markstar.starrequests.utils
 			{
 				_isExecuting = true;
 				_currentRequest = _requests.shift();
-		
+				
 				if( _requestsExecutedThisCyle == _numRequestsPerCycle )
 				{
 					_requestsExecutedThisCyle = 0;
@@ -78,12 +86,13 @@ package couk.markstar.starrequests.utils
 			removeListeners( _currentRequest.failedSignal );
 			_currentRequest = null;
 			_isExecuting = false;
+			
 			sendNextRequest();
 		}
 		
 		/*
-		* Some dirty hacks to get around http://github.com/robertpenner/as3-signals/issues/closed#issue/17
-		*/
+		 * Some dirty hacks to get around http://github.com/robertpenner/as3-signals/issues/closed#issue/17
+		 */
 		protected function requestCompletedListenerNone():void
 		{
 			requestCompleted();

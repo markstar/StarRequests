@@ -1,10 +1,11 @@
 package couk.markstar.starrequests.utils
 {
+	import couk.markstar.starrequests.ICancelable;
 	import couk.markstar.starrequests.requests.IRequest;
 	
 	import org.osflash.signals.ISignal;
 	
-	public final class RequestQueueUtil
+	public final class RequestQueueUtil implements ICancelable
 	{
 		protected var _isExecuting:Boolean;
 		protected var _requests:Vector.<IRequest>;
@@ -24,17 +25,24 @@ package couk.markstar.starrequests.utils
 			sendNextRequest();
 		}
 		
-		public function clear():void
+		public function cancel():void
 		{
-			var request:IRequest;
-			
-			while( _requests.length )
+			if( _currentRequest )
 			{
-				request = _requests.shift();
-				removeListeners( request.completedSignal );
-				removeListeners( request.failedSignal );
+				_currentRequest.cancel();
+				_currentRequest = null;
 			}
-			request = null;
+			
+			if( _requests )
+			{
+				while( _requests.length )
+				{
+					_requests.shift().cancel();
+				}
+			}
+			_requests.length = 0;
+			
+			_isExecuting = false;
 		}
 		
 		protected function sendNextRequest():void
@@ -53,6 +61,7 @@ package couk.markstar.starrequests.utils
 			removeListeners( _currentRequest.failedSignal );
 			_currentRequest = null;
 			_isExecuting = false;
+			
 			sendNextRequest();
 		}
 		

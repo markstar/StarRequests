@@ -31,9 +31,10 @@ package couk.markstar.starrequests.requests
 		
 		override protected function cleanup():void
 		{
-			super.cleanup();
 			_bitmapData.dispose();
 			_bitmapData = null;
+			
+			super.cleanup();
 		}
 		
 		protected function resampleBitmapData():void
@@ -46,24 +47,24 @@ package couk.markstar.starrequests.requests
 			}
 			else
 			{
-				var bmpData:BitmapData = _bitmapData.clone();
+				var bitmapData:BitmapData = _bitmapData.clone();
 				var appliedRatio:Number = 1;
 				
 				do
 				{
 					if( _ratio < 0.5 * appliedRatio )
 					{
-						bmpData = resizeBitmapData( bmpData, 0.5 );
+						bitmapData = resizeBitmapData( bitmapData, 0.5 );
 						appliedRatio = 0.5 * appliedRatio;
 					}
 					else
 					{
-						bmpData = resizeBitmapData( bmpData, _ratio / appliedRatio );
+						bitmapData = resizeBitmapData( bitmapData, _ratio / appliedRatio );
 						appliedRatio = _ratio;
 					}
 				} while( appliedRatio != _ratio );
 				
-				_completedSignal.dispatch( bmpData );
+				_completedSignal.dispatch( bitmapData );
 			}
 			
 			cleanup();

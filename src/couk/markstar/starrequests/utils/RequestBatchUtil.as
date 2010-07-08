@@ -6,7 +6,7 @@ package couk.markstar.starrequests.utils
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	
-	public final class RequestBatchUtil extends AbstractRequest implements IRequest
+	public final class RequestBatchUtil extends AbstractRequest
 	{
 		protected var _isExecuting:Boolean;
 		protected var _requests:Vector.<IRequest>;
@@ -18,6 +18,8 @@ package couk.markstar.starrequests.utils
 			_isExecuting = false;
 			_totalRequests = 0;
 			_requests = new Vector.<IRequest>();
+			
+			super();
 			
 			_completedSignal = new Signal();
 		}
@@ -41,30 +43,35 @@ package couk.markstar.starrequests.utils
 			sendNextRequest();
 		}
 		
+		override public function cancel():void
+		{
+			if( _currentRequest )
+			{
+				_currentRequest.cancel();
+			}
+			
+			if( _requests )
+			{
+				while( _requests.length )
+				{
+					_requests.shift().cancel();
+				}
+			}
+			
+			_isExecuting = false;
+			_totalRequests = 0;
+			
+			super.cancel();
+		}
+		
 		override protected function cleanup():void
 		{
-			super.cleanup();
-			
 			_requests.length = 0;
 			_requests = null;
 			
 			_currentRequest = null;
-		}
-		
-		public function clear():void
-		{
-			var request:IRequest;
 			
-			while( _requests.length )
-			{
-				request = _requests.shift();
-				removeListeners( request.completedSignal );
-				removeListeners( request.failedSignal );
-			}
-			request = null;
-			_totalRequests = 0;
-			
-			cleanup();
+			super.cleanup();
 		}
 		
 		protected function sendNextRequest():void
@@ -74,6 +81,7 @@ package couk.markstar.starrequests.utils
 				_progressSignal.dispatch( 1 );
 				_completedSignal.dispatch();
 				_totalRequests = 0;
+				cleanup();
 				return;
 			}
 			
@@ -99,6 +107,7 @@ package couk.markstar.starrequests.utils
 			_currentRequest.progressSignal.remove( requestProgressListener );
 			_currentRequest = null;
 			_isExecuting = false;
+			
 			sendNextRequest();
 		}
 		

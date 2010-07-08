@@ -8,7 +8,7 @@ package couk.markstar.starrequests.utils
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
 	
-	public final class RequestBatchAsyncUtil extends AbstractRequest implements IRequest
+	public final class RequestBatchAsyncUtil extends AbstractRequest
 	{
 		protected var _numRequestsPerCycle:uint;
 		protected var _requestsExecutedThisCyle:uint;
@@ -22,14 +22,14 @@ package couk.markstar.starrequests.utils
 		
 		public function RequestBatchAsyncUtil( numRequestsPerCycle:uint, cycleDelay:uint = 100 )
 		{
-			super();
-			
 			_numRequestsPerCycle = numRequestsPerCycle;
 			_requestsExecutedThisCyle = _numRequestsPerCycle;
 			_cycleDelay = cycleDelay;
 			_isExecuting = false;
 			_totalRequests = 0;
 			_requests = new Vector.<IRequest>();
+			
+			super();
 			
 			_completedSignal = new Signal();
 		}
@@ -55,28 +55,33 @@ package couk.markstar.starrequests.utils
 		
 		override protected function cleanup():void
 		{
-			super.cleanup();
-			
 			_requests.length = 0;
 			_requests = null;
 			
 			_currentRequest = null;
+			
+			super.cleanup();
 		}
 		
-		public function clear():void
+		override public function cancel():void
 		{
-			var request:IRequest;
-			
-			while( _requests.length )
+			if( _currentRequest )
 			{
-				request = _requests.shift();
-				removeListeners( request.completedSignal );
-				removeListeners( request.failedSignal );
+				_currentRequest.cancel();
 			}
-			request = null;
+			
+			if( _requests )
+			{
+				while( _requests.length )
+				{
+					_requests.shift().cancel();
+				}
+			}
+			
+			_isExecuting = false;
 			_totalRequests = 0;
 			
-			cleanup();
+			super.cancel();
 		}
 		
 		protected function sendNextRequest():void
@@ -86,6 +91,7 @@ package couk.markstar.starrequests.utils
 				_progressSignal.dispatch( 1 );
 				_completedSignal.dispatch();
 				_totalRequests = 0;
+				cleanup();
 				return;
 			}
 			
@@ -129,12 +135,13 @@ package couk.markstar.starrequests.utils
 			_currentRequest.progressSignal.remove( requestProgressListener );
 			_currentRequest = null;
 			_isExecuting = false;
+			
 			sendNextRequest();
 		}
 		
 		/*
-		* Some dirty hacks to get around http://github.com/robertpenner/as3-signals/issues/closed#issue/17
-		*/
+		 * Some dirty hacks to get around http://github.com/robertpenner/as3-signals/issues/closed#issue/17
+		 */
 		protected function requestCompletedListenerNone():void
 		{
 			requestCompleted();

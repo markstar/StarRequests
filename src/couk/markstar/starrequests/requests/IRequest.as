@@ -1,11 +1,14 @@
 package couk.markstar.starrequests.requests
 {
+	import couk.markstar.starrequests.ICancelable;
+	
 	import org.osflash.signals.ISignal;
+
 	/**
 	 * The interface that defines the core methods that are required for any request.
 	 * @author Sharky
 	 */	
-	public interface IRequest
+	public interface IRequest extends ICancelable
 	{
 		/**
 		 * The instance of the started signal for this request

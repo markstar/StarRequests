@@ -12,7 +12,7 @@ package couk.markstar.starrequests.requests
 
 	/**
 	 * A request to load an XML file.
-	 * @author Sharky
+	 * @author markstar
 	 */	
 	public class LoadXMLRequest extends AbstractRequest
 	{
@@ -23,9 +23,10 @@ package couk.markstar.starrequests.requests
 		 */		
 		public function LoadXMLRequest( url:String )
 		{
+			_url = url;
+			
 			super();
 			
-			_url = url;
 			_completedSignal = new Signal( XML );
 			
 			_loader = new URLLoader();
@@ -39,11 +40,11 @@ package couk.markstar.starrequests.requests
 		 * @return An implementation of ISignal. Listeners to the completed signal require an XML as a parameter.
 		 * @example The following code demonstrates a listener for the completed signal:
 		 * <listing version="3.0">
-		 * protected function completedListener( xml:XML ):void
-		 * {
-		 * 		// function implementation
-		 * }
-		 * </listing> 
+protected function completedListener( xml:XML ):void
+{
+	// function implementation
+}
+</listing> 
 		 */
 		override public function get completedSignal():ISignal
 		{
@@ -58,6 +59,17 @@ package couk.markstar.starrequests.requests
 			
 			_loader.load( new URLRequest( _url ) );
 		}
+		
+		/**
+		 * @inheritDoc
+		 */		
+		public override function cancel():void
+		{
+			_loader.close();
+			
+			super.cancel();
+		}
+
 		/**
 		 * @private
 		 */
@@ -97,7 +109,9 @@ package couk.markstar.starrequests.requests
 				failed( e.message.toString() );
 				return;
 			}
+			
 			_completedSignal.dispatch( xml );
+			
 			cleanup();
 		}
 		/**
