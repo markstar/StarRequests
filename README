@@ -2,6 +2,11 @@ StarRequests is a library of modular common requests and utilities built using A
 The main concept is to make each request modular using a consistent interface to enable the creation of useful generic utilities.
 There will be some posts on StarRequests in the future on http://markstar.co.uk, to explain the ideas behind it and show some examples of how to use the library.
 
+0.3 update:
+* Removed requests relating to images (moved to StarImageLib)
+* Added ant build files
+* Made requests cancelable
+
 0.2b update:
 * Added RequestBatchAsyncUtil
 * Added RequestQueueAsyncUtil
