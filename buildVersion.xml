@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="BuildVersion" default="displayVersion">
-	
+<project name="StarRequests_BuildVersion" default="displayVersion">
+
 	<target name="incrementMajor">
+		<antcall target="checkForDefaults"/>
 		<propertyfile file="build.version">
 			<entry key="major" type="int" default="0" operation="+"/>
-			<entry key="minor" type="int" default="0"/>
 		</propertyfile>
 		<property file="build.version"/>
 		<echo message="Incremented to version ${major}.${minor}"/>
 	</target>
-	
+
 	<target name="incrementMinor">
+		<antcall target="checkForDefaults"/>
 		<propertyfile file="build.version">
-			<entry key="major" type="int" default="0"/>
 			<entry key="minor" type="int" default="0" operation="+"/>
 		</propertyfile>
 		<property file="build.version"/>
 		<echo message="Incremented to version ${major}.${minor}"/>
 	</target>
-	
+
 	<target name="displayVersion">
+		<antcall target="checkForDefaults"/>
+		<property file="build.version"/>
+		<echo message="Version is currently ${major}.${minor}"/>
+	</target>
+
+	<target name="checkForDefaults">
 		<propertyfile file="build.version">
 			<entry key="major" type="int" default="0"/>
 			<entry key="minor" type="int" default="0"/>
 		</propertyfile>
-		<property file="build.version"/>
-		<echo message="Version is currently ${major}.${minor}"/>
 	</target>
-	
+
 </project>

@@ -27,10 +27,15 @@ package couk.markstar.starrequests.utils
 			_requests = new Vector.<IRequest>();
 		}
 		
+		public function get cancelled():ISignal
+		{
+			return null;
+		}
+		
 		public function addRequest( request:IRequest ):void
 		{
-			addListeners( request.completedSignal );
-			addListeners( request.failedSignal );
+			addListeners( request.completed );
+			addListeners( request.failed );
 			_requests[ _requests.length ] = request;
 			sendNextRequest();
 		}
@@ -82,8 +87,8 @@ package couk.markstar.starrequests.utils
 		
 		protected function requestCompleted():void
 		{
-			removeListeners( _currentRequest.completedSignal );
-			removeListeners( _currentRequest.failedSignal );
+			removeListeners( _currentRequest.completed );
+			removeListeners( _currentRequest.failed );
 			_currentRequest = null;
 			_isExecuting = false;
 			

@@ -9,25 +9,26 @@ package couk.markstar.starrequests.requests
 	
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
-
+	
 	/**
 	 * A request to load an XML file.
 	 * @author markstar
-	 */	
+	 */
 	public class LoadXMLRequest extends AbstractRequest
 	{
 		protected var _loader:URLLoader;
 		protected var _url:String;
+		
 		/**
 		 * @param url The URL of the XML file to load.
-		 */		
+		 */
 		public function LoadXMLRequest( url:String )
 		{
 			_url = url;
 			
 			super();
 			
-			_completedSignal = new Signal( XML );
+			_completed = new Signal( XML );
 			
 			_loader = new URLLoader();
 			_loader.addEventListener( ProgressEvent.PROGRESS, progressListener );
@@ -35,24 +36,26 @@ package couk.markstar.starrequests.requests
 			_loader.addEventListener( SecurityErrorEvent.SECURITY_ERROR, securityErrorListener );
 			_loader.addEventListener( IOErrorEvent.IO_ERROR, ioErrorListener );
 		}
+		
 		/**
 		 * The instance of the completed signal for this request
 		 * @return An implementation of ISignal. Listeners to the completed signal require an XML as a parameter.
 		 * @example The following code demonstrates a listener for the completed signal:
 		 * <listing version="3.0">
-protected function completedListener( xml:XML ):void
-{
-	// function implementation
-}
-</listing> 
+		   protected function completedListener( xml:XML ):void
+		   {
+		   // function implementation
+		   }
+		   </listing>
 		 */
-		override public function get completedSignal():ISignal
+		override public function get completed():ISignal
 		{
-			return super.completedSignal;
+			return super.completed;
 		}
+		
 		/**
 		 * @inheritDoc
-		 */		
+		 */
 		override public function send():void
 		{
 			super.send();
@@ -62,14 +65,14 @@ protected function completedListener( xml:XML ):void
 		
 		/**
 		 * @inheritDoc
-		 */		
+		 */
 		public override function cancel():void
 		{
 			_loader.close();
 			
 			super.cancel();
 		}
-
+		
 		/**
 		 * @private
 		 */
@@ -85,19 +88,21 @@ protected function completedListener( xml:XML ):void
 			_url = null;
 		
 		}
+		
 		/**
 		 * @private
 		 */
 		protected function progressListener( e:ProgressEvent ):void
 		{
-			_progressSignal.dispatch( e.bytesLoaded / e.bytesTotal );
+			_progress.dispatch( e.bytesLoaded / e.bytesTotal );
 		}
+		
 		/**
 		 * @private
 		 */
 		protected function completeListener( e:Event ):void
 		{
-			_progressSignal.dispatch( 1 );
+			_progress.dispatch( 1 );
 			
 			// try..catch needed to check for valid XML.
 			try
@@ -106,27 +111,29 @@ protected function completedListener( xml:XML ):void
 			}
 			catch( e:Error )
 			{
-				failed( e.message.toString() );
+				dispatchFailed( e.message.toString() );
 				return;
 			}
 			
-			_completedSignal.dispatch( xml );
+			_completed.dispatch( xml );
 			
 			cleanup();
 		}
+		
 		/**
 		 * @private
 		 */
 		protected function securityErrorListener( e:SecurityErrorEvent ):void
 		{
-			failed( e.text );
+			dispatchFailed( e.text );
 		}
+		
 		/**
 		 * @private
 		 */
 		protected function ioErrorListener( e:IOErrorEvent ):void
 		{
-			failed( e.text );
+			dispatchFailed( e.text );
 		}
 	}
 }

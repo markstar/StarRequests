@@ -21,15 +21,15 @@ package couk.markstar.starrequests.utils
 			
 			super();
 			
-			_completedSignal = new Signal();
+			_completed = new Signal();
 		}
 		
 		public function addRequest( request:IRequest ):void
 		{
 			if( !_isExecuting )
 			{
-				addListeners( request.completedSignal );
-				addListeners( request.failedSignal );
+				addListeners( request.completed );
+				addListeners( request.failed );
 				_requests[ _requests.length ] = request;
 			}
 		}
@@ -78,8 +78,8 @@ package couk.markstar.starrequests.utils
 		{
 			if( !_requests.length )
 			{
-				_progressSignal.dispatch( 1 );
-				_completedSignal.dispatch();
+				_progress.dispatch( 1 );
+				_completed.dispatch();
 				_totalRequests = 0;
 				cleanup();
 				return;
@@ -89,7 +89,7 @@ package couk.markstar.starrequests.utils
 			{
 				_currentRequest = _requests.shift();
 				_currentRequest.send();
-				_currentRequest.progressSignal.add( requestProgressListener );
+				_currentRequest.progress.add( requestProgressListener );
 				_isExecuting = true;
 			}
 		}
@@ -97,14 +97,14 @@ package couk.markstar.starrequests.utils
 		protected function requestProgressListener( progress:Number ):void
 		{
 			var totalProgress:Number = ( ( _totalRequests - _requests.length - 1 ) + progress ) / _totalRequests;
-			_progressSignal.dispatch( totalProgress );
+			_progress.dispatch( totalProgress );
 		}
 		
 		protected function requestCompleted():void
 		{
-			removeListeners( _currentRequest.completedSignal );
-			removeListeners( _currentRequest.failedSignal );
-			_currentRequest.progressSignal.remove( requestProgressListener );
+			removeListeners( _currentRequest.completed );
+			removeListeners( _currentRequest.failed );
+			_currentRequest.progress.remove( requestProgressListener );
 			_currentRequest = null;
 			_isExecuting = false;
 			
